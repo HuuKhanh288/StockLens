@@ -1,0 +1,157 @@
+<!doctype html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>StockLens | Trading Workspace</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/css/shell.css?v=1"><link rel="stylesheet" href="/css/journal.css?v=1"><link rel="stylesheet" href="/css/stocklens.css?v=2"></head><body>
+<header class="shell-header"><a href="#home" class="shell-logo" data-view="home">▥ <strong>STOCK<span>LENS</span></strong></a><nav class="shell-nav" aria-label="Chức năng"><button type="button" data-view="home" class="active">Trang chủ</button><button type="button" data-view="journal">Nhật ký giao dịch</button><button type="button" data-view="stocklens">Bộ lọc cổ phiếu</button></nav><span class="shell-tag">PERSONAL TRADING WORKSPACE</span></header>
+<section id="home-view" class="view shell-home"><div class="shell-hero"><div class="shell-eyebrow">STOCKLENS / DASHBOARD</div><h1>Một không gian.<br><em>Mọi quyết định đầu tư.</em></h1><p>Chọn công cụ bạn muốn sử dụng. Nhật ký giúp bạn ghi lại quá trình theo dõi, còn bộ lọc StockLens cho phép thiết lập tiêu chí kỹ thuật cá nhân.</p><div class="shell-status">● &nbsp; Dữ liệu nhật ký được lưu trên máy bằng SQLite</div></div><div class="shell-cards"><button type="button" class="shell-card" data-view="journal"><span class="shell-icon">▤</span><span class="shell-small">01 / JOURNAL</span><strong>Nhật ký giao dịch</strong><span>Ghi chú, phân loại mẫu hình, theo dõi từng phiên và quản lý dữ liệu như Excel.</span><b>Mở nhật ký →</b></button><button type="button" class="shell-card" data-view="stocklens"><span class="shell-icon">⌕</span><span class="shell-small">02 / SCREENER</span><strong>StockLens — Bộ lọc</strong><span>Chọn MA200, dao găm, RSI, thanh khoản và xu hướng. Hiện chỉ có giao diện.</span><b>Mở bộ lọc →</b></button><article class="shell-card shell-future"><span class="shell-icon">＋</span><span class="shell-small">COMING SOON</span><strong>Thêm chức năng</strong><span>Biểu đồ, AI phân tích, danh mục đầu tư và các công cụ khác trong tương lai.</span></article></div></section>
+<section id="journal-view" class="view" hidden><main class="container">
+<div class="eyebrow"><span class="eyebrow-line"></span> PERSONAL TRADING WORKSPACE <span class="eyebrow-bullet">/</span> WATCHLIST</div>
+<section aria-labelledby="mainTitle" class="hero">
+<div class="hero-copy">
+<div class="hero-pretitle">THEO DÕI · ĐÁNH GIÁ · GHI NHỚ</div>
+<h1 id="mainTitle">Nhật ký <span>giao dịch.</span></h1>
+<p>Lưu nhận định mỗi ngày, đánh dấu trạng thái bằng một cú tích và xem lại toàn bộ quá trình theo dõi của bạn.</p>
+<div aria-live="polite" class="save-state"><span class="save-indicator"></span><span id="saveState">Đang tải dữ liệu...</span><span class="save-divider">•</span><span>Lưu trên máy bằng SQLite</span></div>
+</div>
+<div class="session-card">
+<label class="field-label" for="activeDate">NGÀY GHI CHÉP</label>
+<div class="date-wrap">
+<svg aria-hidden="true" viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="5"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg>
+<input aria-label="Chọn ngày ghi chép" id="activeDate" type="date"/>
+</div>
+<label class="field-label" for="recordedDate">NGÀY CÓ CỔ PHIẾU</label>
+<select class="scope-select recorded-date" disabled="" id="recordedDate">
+<option value="">Đang tải danh sách ngày...</option>
+</select>
+<button class="btn btn-primary btn-wide" id="addEntryBtn" type="button">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+          Thêm cổ phiếu
+        </button>
+<button class="btn btn-text" id="cloneBtn" title="Sao chép danh sách mã từ ngày ghi chép gần nhất trước ngày đang chọn" type="button">Kế thừa danh sách ngày trước <span>↗</span></button>
+</div>
+</section>
+<section aria-label="Tổng quan nhật ký" class="stats">
+<article class="stat-card stat-all"><div class="stat-head"><span>Tổng mã theo dõi</span><span class="stat-icon icon-stack">▦</span></div><div class="stat-number" id="statAll">—</div><div class="stat-footer">Trong phạm vi đang xem</div></article>
+<article class="stat-card stat-watch"><div class="stat-head"><span>Cần theo dõi thêm</span><span class="stat-icon icon-watch">◷</span></div><div class="stat-number" id="statWatch">—</div><div class="stat-footer"><span class="mini-dot dot-watch"></span> Đang chờ tín hiệu</div></article>
+<article class="stat-card stat-done"><div class="stat-head"><span>Đã xem</span><span class="stat-icon icon-done">✓</span></div><div class="stat-number" id="statDone">—</div><div class="stat-footer"><span class="mini-dot dot-done"></span> Đã đánh giá</div></article>
+<article class="stat-card stat-setup"><div class="stat-head"><span>Mẫu hình chú ý</span><span class="stat-icon icon-setup">✧</span></div><div class="stat-number" id="statSetup">—</div><div class="stat-footer"><span class="mini-dot dot-setup"></span> Đáng quan sát kỹ</div></article>
+<article class="stat-card stat-fail"><div class="stat-head"><span>Mẫu hình có khả năng thất bại</span><span class="stat-icon icon-fail">×</span></div><div class="stat-number" id="statFail">—</div><div class="stat-footer"><span class="mini-dot dot-fail"></span> Rủi ro tín hiệu thất bại</div></article>
+<article class="stat-card stat-success"><div class="stat-head"><span>Mẫu hình khả năng thành công</span><span class="stat-icon icon-success">↑</span></div><div class="stat-number" id="statSuccess">—</div><div class="stat-footer"><span class="mini-dot dot-success"></span> Tín hiệu triển vọng</div></article>
+<article class="stat-card stat-forming"><div class="stat-head"><span>Có khả năng hình thành mẫu hình</span><span class="stat-icon icon-forming">◈</span></div><div class="stat-number" id="statForming">—</div><div class="stat-footer"><span class="mini-dot dot-forming"></span> Chờ mẫu hình hoàn thiện</div></article>
+</section>
+<section aria-labelledby="journalHeading" class="journal-section">
+<div class="section-header">
+<div>
+<div class="section-tag">WATCHLIST DATABASE</div>
+<h2 id="journalHeading">Bảng theo dõi cổ phiếu <span class="heading-count" id="tableCount">0</span></h2>
+<p class="section-desc">Sửa trực tiếp trong từng ô như Excel · dữ liệu tự động lưu</p>
+</div>
+<div class="section-actions">
+<button class="btn btn-outline" id="exportCsvBtn" title="Xuất dữ liệu hiện tại ra CSV để mở bằng Excel" type="button">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 16v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"></path></svg> Xuất Excel (CSV)
+          </button>
+<button class="btn btn-outline" id="importBtn" title="Nhập dữ liệu từ bản sao lưu JSON" type="button">
+<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 16V4m0 0L8 8m4-4 4 4M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"></path></svg> Khôi phục
+          </button>
+<input accept=".json,application/json" hidden="" id="importFile" type="file"/>
+</div>
+</div>
+<div class="table-panel">
+<div class="toolbar">
+<div class="search-box">
+<svg aria-hidden="true" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+<input aria-label="Tìm kiếm" autocomplete="off" id="searchInput" placeholder="Tìm mã cổ phiếu hoặc nội dung..." type="search"/>
+<kbd>Ctrl K</kbd>
+</div>
+<div class="toolbar-right">
+<span class="toolbar-caption">HIỂN THỊ</span>
+<select aria-label="Phạm vi ngày" class="scope-select" id="dateScope">
+<option value="day">Ngày đang chọn</option>
+<option value="all">Tất cả ngày</option>
+</select>
+</div>
+</div>
+<div aria-label="Lọc theo tiêu chí" class="filterbar" role="group">
+<button class="filter-pill is-active" data-filter="all" type="button">Tất cả <span class="pill-count" id="filterCountAll">0</span></button>
+<button class="filter-pill" data-filter="watch" type="button"><i class="pill-dot dot-watch"></i> Cần theo dõi thêm <span class="pill-count" id="filterCountWatch">0</span></button>
+<button class="filter-pill" data-filter="done" type="button"><i class="pill-dot dot-done"></i> Đã xem <span class="pill-count" id="filterCountDone">0</span></button>
+<button class="filter-pill" data-filter="setup" type="button"><i class="pill-dot dot-setup"></i> Mẫu hình chú ý <span class="pill-count" id="filterCountSetup">0</span></button>
+<button class="filter-pill" data-filter="fail" type="button"><i class="pill-dot dot-fail"></i> Mẫu hình có khả năng thất bại <span class="pill-count" id="filterCountFail">0</span></button>
+<button class="filter-pill" data-filter="success" type="button"><i class="pill-dot dot-success"></i> Mẫu hình khả năng thành công <span class="pill-count" id="filterCountSuccess">0</span></button>
+<button class="filter-pill" data-filter="forming" type="button"><i class="pill-dot dot-forming"></i> Có khả năng hình thành mẫu hình <span class="pill-count" id="filterCountForming">0</span></button>
+</div>
+<div class="table-scroll">
+<table aria-label="Danh sách mã cổ phiếu theo dõi" class="watch-table">
+<colgroup><col class="date-col"/><col class="ticker-col"/><col class="note-col"/><col class="status-col"/><col class="action-col"/></colgroup>
+<thead><tr>
+<th>NGÀY <span class="header-sort">↓</span></th>
+<th>MÃ CỔ PHIẾU</th>
+<th>NỘI DUNG CẦN THEO DÕI</th>
+<th>TIÊU CHÍ <span class="muted-header">(TÍCH 1 LỰA CHỌN)</span></th>
+<th class="text-center">XÓA</th>
+</tr></thead>
+<tbody id="entriesBody"></tbody>
+</table>
+<div class="empty-state" hidden="" id="emptyState">
+<div class="empty-illustration">▤</div>
+<h3>Chưa có cổ phiếu nào</h3>
+<p id="emptyMessage">Hãy thêm mã đầu tiên cho ngày đang chọn hoặc thay đổi bộ lọc.</p>
+<button class="btn btn-primary" id="emptyAddBtn" type="button">+ Thêm cổ phiếu</button>
+</div>
+</div>
+<div class="table-footer"><span><span class="footer-dot"></span><span id="footerCount">Đang hiển thị 0 dòng</span></span><span>Nhấp vào ô để chỉnh sửa · Chọn một tiêu chí để đổi màu cả hàng</span></div>
+</div>
+</section>
+<aside class="info-banner">
+<div class="info-symbol">i</div>
+<div><strong>Dữ liệu nằm trong máy của bạn.</strong> Mỗi thao tác được lưu vào <code>data/stocklens.sqlite3</code>, kể cả khi đóng trình duyệt hay tắt máy. Nên dùng <strong>Sao lưu dữ liệu</strong> định kỳ để tránh mất dữ liệu nếu hỏng máy hoặc xóa thư mục.</div>
+</aside>
+<footer class="page-footer"><span>STOCKLENS <b>JOURNAL</b> / PERSONAL WATCHLIST</span><span>Built for deliberate investing · 2026</span></footer>
+</main>
+<dialog aria-labelledby="dialogTitle" class="entry-dialog" id="entryDialog">
+<form id="entryForm" method="dialog" novalidate="">
+<div class="dialog-header"><div><div class="section-tag">NEW WATCHLIST ENTRY</div><h2 id="dialogTitle">Thêm cổ phiếu theo dõi</h2></div><button aria-label="Đóng" class="icon-button close-dialog" id="closeDialogBtn" type="button">×</button></div>
+<div class="dialog-grid">
+<div class="form-group"><label for="inputTicker">Mã cổ phiếu <span>*</span></label><input autocapitalize="characters" autocomplete="off" id="inputTicker" maxlength="12" name="ticker" placeholder="VD: BSR" required="" type="text"/></div>
+<div class="form-group"><label for="inputDate">Ngày ghi chép <span>*</span></label><input id="inputDate" name="watch_date" required="" type="date"/></div>
+</div>
+<div class="form-group"><label for="inputNote">Theo dõi điều gì?</label><textarea id="inputNote" name="note" placeholder="VD: Quan sát phản ứng của giá khi test MA200, cần thêm tín hiệu xác nhận..." rows="5"></textarea></div>
+<fieldset class="form-group dialog-status"><legend>Tiêu chí ban đầu</legend><div class="dialog-options"><label><input checked="" name="status" type="radio" value="watch"/><span class="opt-watch">Cần theo dõi thêm</span></label><label><input name="status" type="radio" value="done"/><span class="opt-done">Đã xem</span></label><label><input name="status" type="radio" value="setup"/><span class="opt-setup">Mẫu hình chú ý</span></label><label><input name="status" type="radio" value="fail"/><span class="opt-fail">Mẫu hình có khả năng thất bại</span></label><label><input name="status" type="radio" value="success"/><span class="opt-success">Mẫu hình khả năng thành công</span></label><label><input name="status" type="radio" value="forming"/><span class="opt-forming">Có khả năng hình thành mẫu hình</span></label></div></fieldset>
+<div class="dialog-footer"><button class="btn btn-outline" id="cancelDialogBtn" type="button">Hủy</button><button class="btn btn-primary" id="saveEntryBtn" type="submit">+ Lưu cổ phiếu</button></div>
+</form>
+</dialog>
+<div aria-live="polite" class="toast" id="toast" role="status"></div></section>
+<section id="stocklens-view" class="view" hidden><main class="wrap">
+
+<section class="intro">
+<div><div class="kicker">STOCKLENS / CUSTOM SCREENER</div><h1>Bộ lọc cổ phiếu<br/><span>theo phong cách của bạn.</span></h1><p>Thiết kế và lựa chọn những tiêu chí kỹ thuật bạn quan tâm. Đây là bản giao diện đầu tiên — chức năng lọc thực tế sẽ được phát triển sau.</p></div>
+<div class="stage-card"><span class="stage-badge"><i></i> Đang xây dựng</span><strong>GIAI ĐOẠN 01</strong><div class="stage-title">Giao diện &amp; tiêu chí</div><div class="progress-bar"><span></span></div><small>Chưa có logic lọc hoặc kết nối dữ liệu giá.</small></div>
+</section>
+<div class="workspace">
+<form class="filter-form" id="filterform">
+<div class="form-head"><div><div class="panel-kicker">YOUR CRITERIA</div><h2>Thiết lập bộ lọc</h2><p>Chọn một hoặc nhiều điều kiện kỹ thuật.</p></div><span class="count-chip"><span id="selectedCount">0</span> / 6 tiêu chí</span></div>
+<fieldset class="criteria-group"><legend><span class="group-num">01</span> <span>Điều kiện kỹ thuật</span><small>Có thể chọn nhiều</small></legend>
+<div class="option-grid">
+<label class="filter-option" for="MA200"><input id="MA200" name="filter" type="checkbox" value="ma200"/><span aria-hidden="true" class="fake-check">✓</span><span class="option-copy"><strong>Trên MA200</strong><small>Giá nằm trên đường trung bình 200 phiên</small></span><span class="opt-code">TREND</span></label>
+<label class="filter-option" for="filter69"><input id="filter69" name="filter" type="checkbox" value="69"/><span aria-hidden="true" class="fake-check">✓</span><span class="option-copy"><strong>Trên dao găm 69</strong><small>Điều kiện theo bộ chỉ báo cá nhân</small></span><span class="opt-code">69</span></label>
+<label class="filter-option" for="filter129"><input id="filter129" name="filter" type="checkbox" value="129"/><span aria-hidden="true" class="fake-check">✓</span><span class="option-copy"><strong>Trên dao găm 129</strong><small>Điều kiện theo bộ chỉ báo cá nhân</small></span><span class="opt-code">129</span></label>
+<label class="filter-option" for="filter234"><input id="filter234" name="filter" type="checkbox" value="234"/><span aria-hidden="true" class="fake-check">✓</span><span class="option-copy"><strong>Trên dao găm 234</strong><small>Điều kiện theo bộ chỉ báo cá nhân</small></span><span class="opt-code">234</span></label>
+<label class="filter-option" for="rsi"><input id="rsi" name="filter" type="checkbox" value="rsi"/><span aria-hidden="true" class="fake-check">✓</span><span class="option-copy"><strong>Phân kỳ dương (RSI)</strong><small>Ưu tiên tín hiệu phân kỳ dương</small></span><span class="opt-code">RSI</span></label>
+<label class="filter-option" for="vol"><input id="vol" name="filter" type="checkbox" value="vol"/><span aria-hidden="true" class="fake-check">✓</span><span class="option-copy"><strong>Thanh khoản thấp hơn TB 2 phiên</strong><small>Khối lượng dưới trung bình trong 2 phiên liên tiếp</small></span><span class="opt-code">VOL</span></label>
+</div>
+</fieldset>
+<fieldset class="criteria-group trend-group"><legend><span class="group-num">02</span> <span>Xu hướng 52 tuần</span><small>Chỉ chọn một</small></legend>
+<div class="trend-grid">
+<label class="trend-option"><input name="trend" type="radio" value="up"/><span aria-hidden="true" class="trend-symbol up">↗</span><span><strong>Uptrend</strong><small>Xu hướng tăng</small></span><span aria-hidden="true" class="trend-radio"></span></label>
+<label class="trend-option"><input name="trend" type="radio" value="dow"/><span aria-hidden="true" class="trend-symbol down">↘</span><span><strong>Downtrend</strong><small>Xu hướng giảm</small></span><span aria-hidden="true" class="trend-radio"></span></label>
+<label class="trend-option"><input name="trend" type="radio" value="non"/><span aria-hidden="true" class="trend-symbol flat">→</span><span><strong>Nontrend</strong><small>Đi ngang / sideway</small></span><span aria-hidden="true" class="trend-radio"></span></label>
+</div>
+</fieldset>
+<div class="form-actions"><button class="reset-btn" type="reset">Đặt lại</button><button class="submit-btn" type="submit">Lọc cổ phiếu <span>↗</span></button></div>
+</form>
+<aside class="sidebar">
+<section class="summary-card"><div class="panel-kicker">FILTER OVERVIEW</div><h2>Tổng quan lựa chọn</h2><div class="summary-metric"><span>Số tiêu chí đã chọn</span><strong id="overviewCount">00</strong></div><div class="separator"></div><div class="summary-label">Điều kiện đang chọn</div><div class="selected-tags" id="selectedTags"><span class="placeholder">Chưa chọn tiêu chí</span></div><div class="summary-label trend-label">Xu hướng</div><div class="trend-readout" id="trendReadout">Chưa chọn</div></section>
+<section class="status-card"><div class="status-icon">⌘</div><strong>Chưa tích hợp thuật toán lọc</strong><p>Trang này hiện chỉ để chọn tiêu chí và thử giao diện. Chưa truy xuất dữ liệu giá, chưa trả về danh sách mã cổ phiếu.</p><span>UI PREVIEW · VERSION 01</span></section>
+</aside>
+</div>
+<div aria-live="polite" class="result-notice" id="result" role="status"><span>ℹ</span><p>Bộ lọc đang ở chế độ giao diện thử nghiệm. Bạn có thể chọn tiêu chí nhưng chưa có kết quả lọc.</p></div>
+
+</main></section>
+<script src="/js/app.js?v=3" defer></script><script src="/js/stocklens.js?v=1" defer></script><script src="/js/main.js?v=1" defer></script></body></html>
