@@ -57,9 +57,9 @@ if len(df_plot) != len(df):
 #    không tự suy ra từ dữ liệu. Sau khi chạy, cần đối chiếu với cluster_summary.csv
 #    để chắc chắn tên khớp với đặc điểm thực tế của từng cụm.
 cluster_names = {
-    0: "Cổ phiếu an toàn",
+    0: "Cổ phiếu đầu cơ",
     1: "Cổ phiếu tăng trưởng",
-    2: "Cổ phiếu đầu cơ",
+    2: "Cổ phiếu tăng trưởng thấp",
     3: "Cổ phiếu hiệu suất kém"
 }
 
